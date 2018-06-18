@@ -1,0 +1,31 @@
+{
+    "name": "OutputDataset-sql",
+    "properties": {
+        "structure": [
+            {
+                "name": "id",
+                "type": "Int32"
+            },
+            {
+                "name": "firstname",
+                "type": "String"
+            },
+            {
+                "name": "lastname",
+                "type": "String"
+            }
+        ],
+        "published": false,
+        "type": "AzureSqlTable",
+        "linkedServiceName": "SqlLinkedService",
+        "typeProperties": {
+            "tableName": "Demo"
+        },
+        "availability": {
+            "frequency": "Minute",
+            "interval": 15
+        },
+        "external": false,
+        "policy": {}
+    }
+}

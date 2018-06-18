@@ -1,0 +1,64 @@
+- name: Create a new RG for Application gateway
+  azure_rm_resourcegroup:
+    name: "{{ appgw_resource_group_name }}"
+    location: "{{ appgw_location }}"
+
+- name: Create a new Virtual network
+  azure_rm_virtualnetwork:
+    name: "{{appgw_vnet_name}}"
+    resource_group: "{{appgw_resource_group_name}}"
+    address_prefixes_cidr:
+      - 10.1.0.0/16
+
+- name: Create a new subnet
+  azure_rm_subnet:
+    name: "{{appgw_subnet_name}}"
+    virtual_network: "{{appgw_vnet_name}}"
+    resource_group: "{{appgw_resource_group_name}}"
+    address_prefix_cidr: 10.1.0.0/24
+  register: subnet_output
+
+- name: Create a new Public IP
+  azure_rm_publicipaddress:
+    resource_group: "{{appgw_resource_group_name}}"
+    allocation_method: Dynamic
+    name: "{{appgw_publicip_name}}"
+    domain_name_label: "{{appgw_publicip_label}}"
+  register: publicip_output
+
+- name: Create a new Application Gateway   
+  azure_rm_appgw:
+    resource_group: "{{ appgw_resource_group_name }}"
+    name: "{{ appgw_name }}"
+    sku:
+      name: "{{appgw_sku_size}}"
+      tier: "{{appgw_tier}}"
+      capacity: "{{appgw_capacity}}"
+    backend_address_pools:
+      - backend_addresses: []
+        name: test_backend_address_pool
+    gateway_ip_configurations:
+      - subnet:
+          id: "{{ subnet_output.state.id }}"
+        name: appgw_ip_config
+    frontend_ip_configurations:
+       - public_ip_address: "{{appgw_publicip_name}}"
+         name: sample_gateway_frontend_ip_config
+    frontend_ports:
+       - port: 80
+         name: appgw_frontend_port
+    backend_http_settings_collection:
+       - port: 80
+         protocol: http
+         cookie_based_affinity: enabled
+         name: sample_appgateway_http_settings
+    http_listeners:
+       - frontend_ip_configuration: sample_gateway_frontend_ip_config
+         frontend_port: appgw_frontend_port
+         name: sample_http_listener
+    request_routing_rules:
+      - rule_type: Basic
+        backend_address_pool: test_backend_address_pool
+        backend_http_settings: sample_appgateway_http_settings
+        http_listener: sample_http_listener
+        name: rule1

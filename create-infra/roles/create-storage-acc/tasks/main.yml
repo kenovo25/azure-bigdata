@@ -1,0 +1,83 @@
+- name: Create new resource group for the Storage Account - HELLOOO JENKINS !
+  azure_rm_resourcegroup:
+    name: "{{ storage_acc_resource_group_name }}"
+    location: "{{ storage_acc_location }}"
+
+- name: Create a new Storage Account
+  azure_rm_storageaccount:
+    resource_group: "{{storage_acc_resource_group_name}}"
+    name: "{{storage_acc_name}}"
+    type: Standard_RAGRS
+
+
+- name: Create Demo folder container
+  azure_rm_storageblob:
+    resource_group: "{{storage_acc_resource_group_name}}"
+    storage_account_name: "{{storage_acc_name}}"
+    container: "demo"
+    state: present
+
+
+- name: Create Storage feeder container
+  azure_rm_storageblob:
+    resource_group: "{{storage_acc_resource_group_name}}"
+    storage_account_name: "{{storage_acc_name}}"
+    container: "datalake-feeder"
+    state: present
+
+- name: Create storage script container
+  azure_rm_storageblob:
+    resource_group: "{{storage_acc_resource_group_name}}"
+    storage_account_name: "{{storage_acc_name}}"
+    container: "scripts"
+    public_access: blob
+
+- name: Create storage scripts-adla container
+  azure_rm_storageblob:
+    resource_group: "{{storage_acc_resource_group_name}}"
+    storage_account_name: "{{storage_acc_name}}"
+    container: "scripts-adla"
+    public_access: blob
+
+- name: Create sql scripts container
+  azure_rm_storageblob:
+    resource_group: "{{storage_acc_resource_group_name}}"
+    storage_account_name: "{{storage_acc_name}}"
+    container: "sql-scripts"
+    state: present
+
+
+- name: Azure clean 
+  command: az account clear
+
+- name: Connect to Azure
+  command: az login --service-principal -u "{{client_id}}" --password "{{secret}}" --tenant "{{tenant}}"
+
+- name: set subscription
+  command: az account set -s "{{subscription_id }}"
+ 
+- name: get storage acc key list
+  command: az storage account  keys list -g "{{ storage_acc_resource_group_name }}" -n  "{{ storage_acc_name }}"
+  register: storage_acc_key_return
+
+- name: Add modules blob
+  command:  az storage blob upload-batch -d "scripts/modules" -s "../automation/modules/" --account-name "{{ storage_acc_name }}" --account-key "{{ (storage_acc_key_return.stdout | from_json).0.value }}"      
+
+- name: Add runbooks blob
+  command: az storage blob upload-batch -d "scripts/runbooks" -s "../automation/runbooks/" --account-name "{{ storage_acc_name }}" --account-key "{{ (storage_acc_key_return.stdout | from_json).0.value }}"      
+
+- name: Add adla scripts blob
+  command: az storage blob upload-batch -d "scripts-adla" -s "../scripts-adla/" --account-name "{{ storage_acc_name }}" --account-key "{{ (storage_acc_key_return.stdout | from_json).0.value }}"      
+
+
+- name: Add demodata blob
+  command: az storage blob upload-batch -d "demo/import" -s "../demo/import" --account-name "{{ storage_acc_name }}" --account-key "{{ (storage_acc_key_return.stdout | from_json).0.value }}"
+
+
+- name: Add a SQL scripts to the  blob
+  command: az storage blob upload-batch -d "sql-scripts" -s "../sql-scripts" --account-name "{{ storage_acc_name }}" --account-key "{{ (storage_acc_key_return.stdout | from_json).0.value }}"
+
+
+- name: Storage logging activation
+  command: az storage logging update --log "rwd" --retention "30" --services "b"  --account-name "{{ storage_acc_name }}" --account-key "{{ (storage_acc_key_return.stdout | from_json).0.value }}"
+

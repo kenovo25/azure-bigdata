@@ -1,0 +1,62 @@
+- name: Create a new RG for SQL Server/Database
+  azure_rm_resourcegroup:
+    name: "{{ sql_resource_group_name }}"
+    location: "{{ sql_location }}"
+
+- name: Create a new SQL Server/Database
+  azure_rm_deployment:
+    location: "{{ sql_location }}"
+    resource_group_name: "{{ sql_resource_group_name }}"
+    template: 
+      $schema: https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#
+      contentVersion: 1.0.0.0
+      resources: 
+        - apiVersion: 2015-05-01-preview
+          location: "{{sql_location}}"
+          name: "{{sql_server_name}}"
+          type: Microsoft.Sql/servers
+          properties:
+            administratorLogin: "{{sql_adminlogin}}"
+            administratorLoginPassword: "{{sql_adminpass}}"
+            version: '12.0'
+          resources:
+            - apiVersion: 2017-10-01-preview
+              dependsOn:
+                - "Microsoft.Sql/servers/{{sql_server_name}}"
+              location: "{{sql_location}}"
+              name: "{{sql_db_name}}"
+              properties:
+                collation: "{{sql_collation}}"
+                maxSizeBytes: 268435456000
+                sampleName: ""
+                zoneRedundant: "false"
+                licenseType: ""
+              sku:
+                name: S0
+                tier: Standard
+              type: databases
+            - apiVersion: 2014-04-01-preview
+              dependsOn:
+                - "Microsoft.Sql/servers/{{sql_server_name}}"
+              location: "{{sql_location}}"
+              name: AllowAllWindowsAzureIps
+              properties:
+                endIpAddress: 0.0.0.0
+                startIpAddress: 0.0.0.0
+              type: firewallrules
+
+- name: Azure clean
+  command: az account clear
+
+- name: Connect to Azure
+  command: az login --service-principal -u "{{client_id}}" --password "{{secret}}" --tenant "{{tenant}}"
+
+- name: set subscription
+  command: az account set -s "{{subscription_id }}"
+
+- name: get storage acc key list
+  command: az storage account  keys list -g "{{ storage_acc_resource_group_name }}" -n  "{{ storage_acc_name }}"
+  register: storage_acc_key_return
+
+- name: import bacpac file to Database
+  command: az sql db import --resource-group {{sql_resource_group_name}} --server {{sql_server_name}} --name {{sql_db_name}} --admin-password {{sql_adminpass}} --admin-user {{sql_adminlogin}} --storage-key "{{(storage_acc_key_return.stdout | from_json).0.value}}" --storage-key-type StorageAccessKey --storage-uri "https://{{storage_acc_name}}.blob.core.windows.net/sql-scripts/sqldb.bacpac"

@@ -1,0 +1,11 @@
+{
+    "name": "StorageLinkedService",
+    "properties": {
+        "description": "",
+        "hubName": "demodatafactory021_hub",
+        "type": "AzureStorage",
+        "typeProperties": {
+            "connectionString": "DefaultEndpointsProtocol=https;AccountName=storageaccountazer;AccountKey=Tc/RG2WyR2rQECZK8GsUyPztKVNvKRvS4rTbvSYiJ8jkUEraWteENwuVbFcobCS/4ToqQ9v2F6IzQ5UatFTSuQ==;EndpointSuffix=core.windows.net"
+        }
+    }
+}

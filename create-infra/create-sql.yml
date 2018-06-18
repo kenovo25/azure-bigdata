@@ -1,0 +1,15 @@
+- name: Create objects in the Azure elements (except virtual machines and its dependencies, like VNETs, subnets, etc., which are created in provision_hosts.yml).
+  hosts: localhost
+  connection: local
+  
+  tasks: 
+    - include_role:
+        name: create-sqldb
+      vars:
+        sql_location: northeurope
+        sql_db_name: sqldatabasedemo432
+        sql_server_name: sqlserverdemo432
+        sql_resource_group_name: sql_rg_eu
+        sql_collation: SQL_Latin1_General_CP1_CI_AS
+        sql_adminlogin: kenovo
+        sql_adminpass: marwazaher25@

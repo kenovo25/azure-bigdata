@@ -1,0 +1,22 @@
+- name: Create a new RG for Data Lake Analytics
+  azure_rm_resourcegroup:
+    name: "{{ dla_resource_group_name }}"
+    location: "{{ dla_location }}"
+
+- name: Create a new DLA
+  azure_rm_deployment:
+    location: "{{ dla_location }}"
+    resource_group_name: "{{ dla_resource_group_name }}"
+    template: 
+      $schema: https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#
+      contentVersion: 1.0.0.0
+      resources: 
+        - name: "{{dla_name}}"
+          apiVersion: "2016-11-01"
+          location: "{{dla_location}}"
+          type: Microsoft.DataLakeAnalytics/accounts
+          properties:
+            defaultDataLakeStoreAccount: "{{dls_name}}"
+            dataLakeStoreAccounts:
+              - name: "{{dls_name}}"
+            newTier: Consumption

@@ -1,0 +1,14 @@
+- name: Create objects in the Azure elements (except virtual machines and its dependencies, like VNETs, subnets, etc., which are created in provision_hosts.yml).
+  hosts: localhost
+  connection: local
+  
+  tasks: 
+    - include_role:
+        name: create-vpn-gw
+      vars:
+        location: westeurope
+        network_resource_group_name: Test
+        subscription_id: 14451d94-55d8-4f0a-add4-960397ba28bd
+        virtual_network_gateway_vpn_ip_name: GatewayI3
+        network_name: steliahub
+        virtual_network_gateway_vpn_name: aisoaj31

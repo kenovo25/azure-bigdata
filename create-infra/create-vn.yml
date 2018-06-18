@@ -1,0 +1,48 @@
+- name: Create objects in the Azure elements (except virtual machines and its dependencies, like VNETs, subnets, etc., which are created in provision_hosts.yml).
+  hosts: localhost
+  connection: local
+  vars_files: 
+    - vars.yml
+  tasks: 
+  - name: Create stelia-eu-hub virtual network
+    azure_rm_virtualnetwork:
+      name: "{{ stelia_eu_hub }}"
+      resource_group: "{{ stelia_eu_hub_rg }}"
+      address_prefixes_cidr:
+        - "10.18.10.0/26"
+      tags:
+        env: "{{ stelia_eu_hub }}"
+        
+  - name: Create private-eu-prod virtual network
+    azure_rm_virtualnetwork:
+      name: "{{ private_eu_prod }}"
+      resource_group: "{{ private_eu_prod_rg }}"
+      address_prefixes_cidr:
+        - "10.20.10.0/25"
+      tags:
+        env: "{{ private_eu_prod }}"
+ 
+  - name: Create private-eu-prod virtual network
+    azure_rm_virtualnetwork:
+      name: "{{ private_eu_dev }}"
+      resource_group: "{{ private_eu_dev_rg }}"
+      address_prefixes_cidr:
+        - "10.22.10.0/25"
+      tags:
+        env: "{{ private_eu_dev }}"
+
+  - name: Create Gateway subnet
+    azure_rm_subnet:
+      name: Gateway
+      virtual_network_name: "{{ stelia_eu_hub }}"
+      resource_group: "{{ stelia_eu_hub_rg }}"
+      address_prefix_cidr: "10.18.10.0/27"
+
+  - name: Create Default subnet 
+    azure_rm_subnet:
+      name: default
+      virtual_network_name: "{{ stelia_eu_hub }}"
+      resource_group: "{{ stelia_eu_hub_rg }}"
+      address_prefix_cidr: "10.18.10.32/27"
+
+  

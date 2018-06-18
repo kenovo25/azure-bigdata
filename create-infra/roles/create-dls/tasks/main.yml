@@ -1,0 +1,23 @@
+- name: Create a new RG for Data Lake Store
+  azure_rm_resourcegroup:
+    name: "{{ dls_resource_group_name }}"
+    location: "{{ dls_location }}"
+
+- name: Create a new DLS
+  azure_rm_deployment:
+    location: "{{ dls_location }}"
+    resource_group_name: "{{ dls_resource_group_name }}"
+    template:
+      $schema: https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#
+      contentVersion: 1.0.0.0
+      resources:
+        - name: "{{dls_name}}"
+          apiVersion: "2016-11-01"
+          location: "{{dls_location}}"
+          type: Microsoft.DataLakeStore/accounts
+          properties:
+            newTier: Consumption
+            encryptionState: Enabled
+            encryptionConfig:
+              type: ServiceManaged
+

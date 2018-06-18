@@ -1,0 +1,15 @@
+{
+    "name": "SqlLinkedService",
+    "properties": {
+        "description": "",
+        "hubName": "demodatafactory021_hub",
+        "type": "AzureSqlDatabase",
+        "typeProperties": {
+            "connectionString": "Data 
+Source=tcp:sqlserverdemo726.database.windows.net,1433;Initial 
+Catalog=sqldatabasedemo726;Integrated Security=False;User 
+ID=kenovo@sqlserverdemo726;Password=**********;Connect 
+Timeout=30;Encrypt=True"
+        }
+    }
+}

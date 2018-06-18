@@ -1,0 +1,23 @@
+- name: Create objects in the Azure elements (except virtual machines and its dependencies, like VNETs, subnets, etc., which are created in provision_hosts.yml).
+  hosts: localhost
+  connection: local
+  vars_files: 
+    - vars.yml  
+  tasks: 
+    - include_role:
+        name: create-storage-acc
+
+    - include_role:
+        name: create-dls
+
+    - include_role:
+        name: create-dla
+
+    - include_role:
+        name: create-sqldb
+
+    - include_role:
+        name: create-df
+   
+    - include_role:
+        name: create_vgw

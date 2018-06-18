@@ -1,0 +1,8 @@
+- name: Create objects in the Azure elements (except virtual machines and its dependencies, like VNETs, subnets, etc., which are created in provision_hosts.yml).
+  hosts: localhost
+  connection: local
+  vars_files: 
+    - vars.yml  
+  tasks: 
+    - include_role:
+        name: create-df

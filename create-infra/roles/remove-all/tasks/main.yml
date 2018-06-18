@@ -1,0 +1,34 @@
+- name: Delete Datafactory RG
+  azure_rm_resourcegroup:
+    name: "{{ df_resource_group_name }}"
+    location: "{{ df_location }}"
+    state: absent
+    force: yes
+
+- name: Delete DataLakeAnalytics RG
+  azure_rm_resourcegroup:
+    name: "{{ dla_resource_group_name }}"
+    location: "{{ dla_location }}"
+    state: absent
+    force: yes
+
+- name: Delete DataLakeStore RG
+  azure_rm_resourcegroup:
+    name: "{{ dls_resource_group_name }}"
+    location: "{{ dls_location }}"
+    state: absent
+    force: yes
+
+- name: Delete SQL RG
+  azure_rm_resourcegroup:
+    name: "{{ sql_resource_group_name }}"
+    location: "{{ sql_location }}"
+    state: absent
+    force: yes
+
+- name: Delete Storage RG
+  azure_rm_resourcegroup:
+    name: "{{ storage_acc_resource_group_name }}"
+    location: "{{ storage_acc_location }}"
+    state: absent
+    force: yes

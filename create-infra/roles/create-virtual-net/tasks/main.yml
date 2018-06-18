@@ -1,0 +1,29 @@
+- name: Create a new virtual network 
+  azure_rm_virtualnetwork:
+    name: "{{ vnet_name }}"
+    resource_group: "{{ vnet_rg }}"
+    address_prefixes_cidr:
+      - "{{ vnet_address }}"
+    tags:
+      tag: "{{ vnet_tag }}"
+        
+- name: Create the default subnet 
+  azure_rm_subnet:
+    name: default
+    virtual_network_name: "{{ vnet_name }}"
+    resource_group: "{{ vnet_rg }}"
+    address_prefix_cidr: "{{ default_subnet_address }}"
+
+- name: Create the lb subnet
+  azure_rm_subnet:
+    name: lb
+    virtual_network_name: "{{ vnet_name }}"
+    resource_group: "{{ vnet_rg }}"
+    address_prefix_cidr: "{{ lb_subnet_address }}"
+
+- name: Create the gateway subnet
+  azure_rm_subnet:
+    name: GatewaySubnet
+    virtual_network_name: "{{ vnet_name }}"
+    resource_group: "{{ vnet_rg }}"
+    address_prefix_cidr: "{{ gateway_subnet_address }}"  

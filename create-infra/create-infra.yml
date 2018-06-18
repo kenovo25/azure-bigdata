@@ -1,0 +1,29 @@
+- name: Create objects in the Azure elements (except virtual machines and its dependencies, like VNETs, subnets, etc., which are created in provision_hosts.yml).
+  hosts: localhost
+  connection: local
+  
+  tasks: 
+    - include_role:
+        name: create-virtual-net
+      vars:
+        vnet_address: 10.0.0.0/16
+        vnet_rg: Test
+        vnet_name: demo-vnet
+        vnet_tag: ansible-created
+        default_subnet_address: 10.0.0.0/24 
+        lb_subnet_address: 10.0.1.0/24
+        gateway_subnet_address: 10.0.2.0/24                
+      name: Creating ansible vnet network
+
+    - include_role:
+        name: create-virtual-net
+      vars:
+        vnet_address: 10.10.0.0/16
+        vnet_rg: Test
+        vnet_name: steliahub
+        vnet_tag: stelia-hub-eu
+        default_subnet_address: 10.10.0.0/24
+        lb_subnet_address: 10.10.1.0/24
+        gateway_subnet_address: 10.10.2.0/24
+      name: Creating Stelia vnet network
+

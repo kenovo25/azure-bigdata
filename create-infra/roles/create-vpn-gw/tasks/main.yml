@@ -1,0 +1,41 @@
+- name: Create a VPN virtual network gateway
+  azure_rm_deployment:
+    location: "{{ location }}"
+    resource_group_name: "{{ network_resource_group_name }}"
+    template: 
+      $schema: https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#
+      contentVersion: 1.0.0.0
+      resources: 
+        - type: "Microsoft.Network/publicIPAddresses"
+          name: "{{ virtual_network_gateway_vpn_ip_name }}"
+          apiVersion: "2017-06-01"
+          location: "{{ location }}"
+          scale: null
+          properties:
+            publicIPAddressVersion: "IPv4"
+            publicIPAllocationMethod: "Dynamic"
+          dependsOn: []
+
+        - type: "Microsoft.Network/virtualNetworkGateways"
+          name: "{{ virtual_network_gateway_vpn_name }}"
+          apiVersion: "2017-06-01"
+          location: "{{ location }}"
+          scale: null
+          properties:
+            ipConfigurations:
+              - name: "default"
+                properties:
+                  privateIPAllocationMethod: "Dynamic"
+                  publicIPAddress: 
+                    id: "/subscriptions/{{subscription_id}}/resourceGroups/{{network_resource_group_name}}/providers/Microsoft.Network/publicIPAddresses/{{virtual_network_gateway_vpn_ip_name}}"
+                  subnet: 
+                    id: "/subscriptions/{{subscription_id}}/resourceGroups/{{network_resource_group_name}}/providers/Microsoft.Network/virtualNetworks/{{network_name}}/subnets/gatewaySubnet"
+            sku:
+              name: "VpnGw1"
+              tier: "VpnGw1"
+            gatewayType: "Vpn"
+            vpnType: "RouteBased"
+            enableBgp: false
+          dependsOn:
+            - "/subscriptions/{{subscription_id}}/resourceGroups/{{network_resource_group_name}}/providers/Microsoft.Network/publicIPAddresses/{{virtual_network_gateway_vpn_ip_name}}"
+  async: 7200

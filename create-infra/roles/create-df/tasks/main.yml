@@ -1,0 +1,32 @@
+- name: Connect to Azure
+  command: az account clear
+- command: az login --service-principal -u "{{ client_id }}" --password "{{secret}}"  --tenant  "{{ tenant }}"
+  
+- name: Get the Storage Account key
+  command: az storage account  keys list -g "{{ storage_acc_resource_group_name }}" -n  "{{ storage_acc_name }}"
+  register: storage_acc_facts
+        
+- name: Create a new Resource Group for Datafactory
+  azure_rm_resourcegroup:
+    name: "{{ df_resource_group_name }}"
+    location: "{{ df_location }}"
+
+- name: Generate Datafactory config 
+  script: scripts/generate_df_arm.py --datafactory_name={{ df_name }} --sqlserver_username={{sql_adminlogin}} --datalake_store_name={{ dls_name }}   --client_id={{ client_id }} --secret={{ secret }} --subscription_id={{ subscription_id }} --tenant={{ tenant }} --datalake_store_resource_group_name={{ dls_resource_group_name }} --datalake_analytics_name={{ dla_name }}  --datalake_analytics_resource_group_name={{ dla_resource_group_name }} --sqlserver_name={{ sql_server_name }} --sqlserver_catalog={{ sql_location }} --sqldatabase_as_name={{ sql_db_name }} --sqlserver_password={{ sql_adminpass }} --storage_account_name={{ storage_acc_name }}  --storage_account_key={{ (storage_acc_facts.stdout | from_json).0.value }} --startTime="2018-06-06T19:00:00" --endTime="2018-06-06T20:00:00" --isPaused=false
+  register: generate_df_arm_returns
+
+- debug:
+    var:  generate_df_arm_returns.stdout | from_json 
+- name: Create a new DataFactory
+  azure_rm_deployment:
+    location: "{{ df_location }}"
+    resource_group_name: "{{ df_resource_group_name }}"
+    template: 
+      $schema: https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#
+      contentVersion: 1.0.0.0
+      resources: 
+        - name: "{{df_name}}"
+          apiVersion: "2015-10-01"
+          location: "{{df_location}}"
+          type: Microsoft.DataFactory/dataFactories
+          resources: "{{ generate_df_arm_returns.stdout | from_json }}"

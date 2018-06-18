@@ -1,0 +1,8 @@
+- mssql_db:
+    login_host: servsql.database.windows.net
+    login_user: user1
+    login_password: kortobi25@
+    name: a
+    state: present
+
+

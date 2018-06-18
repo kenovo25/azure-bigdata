@@ -1,0 +1,55 @@
+{
+    "name": "Copy-Blob-SQL",
+    "properties": {
+        "activities": [
+            {
+                "type": "Copy",
+                "typeProperties": {
+                    "source": {
+                        "type": "BlobSource",
+                        "recursive": false
+                    },
+                    "sink": {
+                        "type": "SqlSink",
+                        "writeBatchSize": 0,
+                        "writeBatchTimeout": "00:00:00"
+                    },
+                    "translator": {
+                        "type": "TabularTranslator",
+                        "columnMappings": 
+"id:id,firstname:firstname,lastname:lastname"
+                    }
+                },
+                "inputs": [
+                    {
+                        "name": "InputDataset-blob"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "OutputDataset-sql"
+                    }
+                ],
+                "policy": {
+                    "timeout": "1.00:00:00",
+                    "concurrency": 1,
+                    "executionPriorityOrder": "NewestFirst",
+                    "style": "StartOfInterval",
+                    "retry": 3,
+                    "longRetry": 0,
+                    "longRetryInterval": "00:00:00"
+                },
+                "scheduler": {
+                    "frequency": "Minute",
+                    "interval": 15
+                },
+                "name": "ActivityCopyBlobToSql"
+            }
+        ],
+        "start": "2018-06-06T10:00:00Z",
+        "end": "2099-12-30T23:00:00Z",
+        "isPaused": false,
+        "hubName": "demodatafactory021_hub",
+        "pipelineMode": "Scheduled"
+    }
+}
