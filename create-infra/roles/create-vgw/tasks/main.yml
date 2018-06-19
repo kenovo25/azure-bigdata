@@ -57,3 +57,5 @@
           sku:
             name: "{{vnetgw_sku_name}}"
             tier: "{{vnetgw_sku_tier}}"
+   async: 3600
+   poll: 0
