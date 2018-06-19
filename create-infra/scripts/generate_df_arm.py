@@ -71,19 +71,6 @@ def main():
     #  sys.exit(2)
     
 
-  #datafactory_name = "cqeuproddf"
-  #datalake_store_name = "cqeuprodds"
-  #client_id = 'd5526693-659f-4423-bca6-b682adc53b88'
-  #secret = 'K8vg3hhOEaylWp8fneKkaStFMDkadgbATjKWTsSH2eU='
-  #subscription_id = '2dd87ed1-fb03-49b8-a38b-e5a5023db2a6'
-  #tenant = '356853db-a1f6-4069-9e2e-938d6bf1499d'
-  #datalake_store_resource_group_name = 'CQ_EU_PROD_DLS'
-  #datalake_analytics_name = 'cqeuprodda'
-  #datalake_analytics_resource_group_name = 'CQ_EU_PROD_DLA'
-  #sqlserver_name = 'cqeuprodsql'
-  #storage_account_name = 'cqeuprodsa'
-  #storage_account_key = 'bozoleclown'
-
   arm_resources = [] 
   # read all the files of the datasets directory
 
