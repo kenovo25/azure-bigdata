@@ -7,7 +7,7 @@
     - include_role:
         name: create-storage-acc
 
-    - includ_role:
+    - include_role:
         name: create-automation
 
     - include_role:
