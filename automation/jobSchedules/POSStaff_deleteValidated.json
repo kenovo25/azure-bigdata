@@ -1,0 +1,22 @@
+{
+  "comments": "Generalized from resource: '/subscriptions/44b6b170-8287-492f-9ac5-304590f6d1aa/resourcegroups/CQ_EU_PP_AUT/providers/Microsoft.Automation/automationAccounts/cqeuppaut/jobSchedules/9a1a3bf9-9308-515f-bd99-16ead628fc73'.",
+  "type": "Microsoft.Automation/automationAccounts/jobSchedules",
+  "name": "[concat(parameters('automationAccounts_cqeuppaut_name'), '/', parameters('jobSchedules_9a1a3bf9_9308_515f_bd99_16ead628fc73_name'))]",
+  "apiVersion": "2015-10-31",
+  "scale": null,
+  "properties": {
+    "runbook": {
+      "name": "deleteFromValidatedFolder"
+    },
+    "schedule": {
+      "name": "schedulerPOSStaff_deleteValidated"
+    },
+    "runOn": null,
+    "parameters": {
+      "FOLDERNAME": "POSStaff",
+      "CONTAINERNAME": "datalake-feeder",
+      "ADLSFOLDER": "POS"
+    }
+  },
+  "dependsOn": ["[resourceId('Microsoft.Automation/automationAccounts', parameters('automationAccounts_cqeuppaut_name'))]"]
+}

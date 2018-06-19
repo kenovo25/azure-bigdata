@@ -1,0 +1,16 @@
+{
+            "type": "Microsoft.Automation/automationAccounts/modules",
+            "name": "AzureRM.Sql",
+            "apiVersion": "2015-10-31",
+            "scale": null,
+            "properties": {
+                "contentLink":
+		{
+		    "uri": "AzureRM.Sql.zip",
+                    "version": "4.2.1"
+		}
+            },
+            "dependsOn": [
+		"AzureRM.Resources"
+            ]
+}

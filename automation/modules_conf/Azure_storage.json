@@ -1,0 +1,16 @@
+{
+            "type": "Microsoft.Automation/automationAccounts/modules",
+            "name": "Azure.Storage",
+            "apiVersion": "2015-10-31",
+            "scale": null,
+            "properties": {
+                "contentLink":
+		{
+		    "uri": "Azure.Storage.zip",
+                    "version": "4.1.1"
+		}
+            },
+            "dependsOn": [
+		"AzureRM.Profile"
+            ]
+}

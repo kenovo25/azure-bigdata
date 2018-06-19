@@ -1,0 +1,16 @@
+{
+            "type": "Microsoft.Automation/automationAccounts/modules",
+            "name": "Azure",
+            "apiVersion": "2015-10-31",
+            "scale": null,
+            "properties": {
+                "contentLink":
+		{
+		    "uri": "Azure.zip",
+                    "version": "5.1.1"
+		}
+            },
+            "dependsOn": [
+		"Azure.storage"
+            ]
+}

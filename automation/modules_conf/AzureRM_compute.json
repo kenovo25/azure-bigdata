@@ -1,0 +1,16 @@
+{
+            "type": "Microsoft.Automation/automationAccounts/modules",
+            "name": "AzureRM.Compute",
+            "apiVersion": "2015-10-31",
+            "scale": null,
+            "properties": {
+                "contentLink":
+		{
+		    "uri": "AzureRM.Compute.zip",
+                    "version": "4.3.2"
+		}
+            },
+            "dependsOn": [
+		"AzureRM.Automation"
+            ]
+}

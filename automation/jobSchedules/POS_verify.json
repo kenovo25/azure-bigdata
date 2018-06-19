@@ -1,0 +1,25 @@
+{
+  "comments": "Generalized from resource: '/subscriptions/44b6b170-8287-492f-9ac5-304590f6d1aa/resourcegroups/CQ_EU_PP_AUT/providers/Microsoft.Automation/automationAccounts/cqeuppaut/jobSchedules/c4662f1e-74f3-567a-badb-9f6ef8bbbd17'.",
+  "type": "Microsoft.Automation/automationAccounts/jobSchedules",
+  "name": "[concat(parameters('automationAccounts_cqeuppaut_name'), '/', parameters('jobSchedules_c4662f1e_74f3_567a_badb_9f6ef8bbbd17_name'))]",
+  "apiVersion": "2015-10-31",
+  "scale": null,
+  "properties": {
+    "runbook": {
+      "name": "verifyAndCopy"
+    },
+    "schedule": {
+      "name": "schedulerPOS_verify"
+    },
+    "runOn": null,
+    "parameters": {
+      "FOLDERNAME": "POS",
+      "FILEREGEX": "^POS_[a-z,A-Z]*_[a-z,A-Z]*_[a-z,A-Z]*_[0-9]{14}_[0-9]*.json$",
+      "CONTAINERNAME": "datalake-feeder",
+      "FILEEXTENSION": "json",
+      "SEQPOSITION": 5,
+      "SEQMAXSIZE" : 4
+    }
+  },
+  "dependsOn": ["[resourceId('Microsoft.Automation/automationAccounts', parameters('automationAccounts_cqeuppaut_name'))]"]
+}

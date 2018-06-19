@@ -1,0 +1,16 @@
+{
+  "comments": "Generalized from resource: '/subscriptions/44b6b170-8287-492f-9ac5-304590f6d1aa/resourcegroups/CQ_EU_PP_AUT/providers/Microsoft.Automation/automationAccounts/cqeuppaut/schedules/schedulerConsumercqeuppaut'.",
+  "type": "Microsoft.Automation/automationAccounts/schedules",
+  "name": "[concat(parameters('automationAccounts_cqeuppaut_name'), '/', parameters('schedules_schedulerConsumercqeuppaut_name'))]",
+  "apiVersion": "2015-10-31",
+  "scale": null,
+  "properties": {
+    "description": "scheduling",
+    "startTime": "2018-02-13T15:53:00+00:00",
+    "expiryTime": "9999-12-31T23:59:00+00:00",
+    "interval": 1,
+    "frequency": "Day",
+    "timeZone": "UTC"
+  },
+  "dependsOn": ["[resourceId('Microsoft.Automation/automationAccounts', parameters('automationAccounts_cqeuppaut_name'))]"]
+}

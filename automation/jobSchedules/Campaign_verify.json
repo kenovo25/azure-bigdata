@@ -1,0 +1,25 @@
+{
+  "comments": "Generalized from resource: '/subscriptions/44b6b170-8287-492f-9ac5-304590f6d1aa/resourcegroups/CQ_EU_PP_AUT/providers/Microsoft.Automation/automationAccounts/cqeuppaut/jobSchedules/c4662f1e-74f3-567a-badb-9f6ef8bbbd17'.",
+  "type": "Microsoft.Automation/automationAccounts/jobSchedules",
+  "name": "[concat(parameters('automationAccounts_cqeuppaut_name'), '/', parameters('jobSchedules_c4662f1e_74f3_567a_badb_9f6ef8bbbd17_name'))]",
+  "apiVersion": "2015-10-31",
+  "scale": null,
+  "properties": {
+    "runbook": {
+      "name": "verifyAndCopy"
+    },
+    "schedule": {
+      "name": "schedulerCampaign_verify"
+    },
+    "runOn": null,
+    "parameters": {
+      "FOLDERNAME": "Campaign",
+      "FILEREGEX": "^D[0-9]{8}_(BROAD_LOG_[A-Z]{2}|CAMPAIGN|DELIVERY|DELIVERY_COST|DELIVERY_PROMOTED_PRODUCTS|LINK_DELIVERY_POS|SURVEY|TRACKING_LOG_[A-Z]{2}).txt$",
+      "CONTAINERNAME": "datalake-feeder",
+      "FILEEXTENSION": "txt",
+      "SEQPOSITION": 0,
+      "SEQMAXSIZE" : 0
+    }
+  },
+  "dependsOn": ["[resourceId('Microsoft.Automation/automationAccounts', parameters('automationAccounts_cqeuppaut_name'))]"]
+}

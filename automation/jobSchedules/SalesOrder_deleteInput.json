@@ -1,0 +1,25 @@
+{
+  "comments": "Generalized from resource: '/subscriptions/44b6b170-8287-492f-9ac5-304590f6d1aa/resourcegroups/CQ_EU_PP_AUT/providers/Microsoft.Automation/automationAccounts/cqeuppaut/jobSchedules/9a1a3bf9-9308-515f-bd99-16ead628fc73'.",
+  "type": "Microsoft.Automation/automationAccounts/jobSchedules",
+  "name": "[concat(parameters('automationAccounts_cqeuppaut_name'), '/', parameters('jobSchedules_9a1a3bf9_9308_515f_bd99_16ead628fc73_name'))]",
+  "apiVersion": "2015-10-31",
+  "scale": null,
+  "properties": {
+    "runbook": {
+      "name": "deleteFromInputFolder"
+    },
+    "schedule": {
+      "name": "schedulerSalesOrder_deleteInput"
+    },
+    "runOn": null,
+    "parameters": {
+      "FOLDERNAME": "SalesOrder",
+      "FILEREGEX": "^SalesOrder_[a-z,A-Z]*_[a-z,A-Z]*_[a-z,A-Z]*_[0-9]{14}_[0-9]*.json$",
+      "CONTAINERNAME": "datalake-feeder",
+      "FILEEXTENSION": "json",
+      "SEQPOSITION": 5,
+      "SEQMAXSIZE" : 4
+    }
+  },
+  "dependsOn": ["[resourceId('Microsoft.Automation/automationAccounts', parameters('automationAccounts_cqeuppaut_name'))]"]
+}

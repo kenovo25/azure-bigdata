@@ -1,0 +1,15 @@
+{
+            "type": "Microsoft.Automation/automationAccounts/modules",
+            "name": "AzureRM.Profile",
+            "apiVersion": "2015-10-31",
+            "scale": null,
+            "properties": {
+                "contentLink":
+		{
+		    "uri": "AzureRM.profile.zip",
+                    "version": "4.3.1"
+		}
+            },
+            "dependsOn": [
+            ]
+}
