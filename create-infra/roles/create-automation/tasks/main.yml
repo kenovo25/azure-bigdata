@@ -3,7 +3,7 @@
     name: "{{ automation_resource_group_name }}"
     location: "{{ automation_location }}"
 
-- script: generate_automation_arm.py --automation_name={{ automation_acc_name }} --location={{ automation_location }} --client_id={{ client_id }} --tenant={{ tenant }} --subscription_id={{ subscription_id }} --certificate_base64={{automation_certif}} --certificate_thumbprint={{automation_certif}} --storage_account={{ storage_account_name }}
+- script: generate_automation_arm.py --automation_name={{ automation_acc_name }} --location={{ automation_location }} --client_id={{ client_id }} --tenant={{ tenant }} --subscription_id={{ subscription_id }} --certificate_base64={{automation_certif}} --certificate_thumbprint={{automation_certif}} --storage_account={{ storage_acc_name }}
   register: generate_automation_arm_returns
  
 
