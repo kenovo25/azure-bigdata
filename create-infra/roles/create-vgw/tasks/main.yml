@@ -1,4 +1,3 @@
-
 - name: Create a new vnet gateway ressource group
   azure_rm_resourcegroup:
     name: "{{vnetgw_resource_group_name}}"
@@ -11,6 +10,25 @@
     address_prefixes_cidr:
       - "{{vnetgw_vnet_address}}"
 
+- name: Create a subnet
+  azure_rm_subnet:
+    name: "{{vnetgw_subnet_name}}"
+    virtual_network_name: "{{vnetgw_vnet_name}}"
+    resource_group: "{{vnetgw_resource_group_name}}"
+    address_prefix_cidr: "{{vnetgw_subnet_prefix}}"  
+  register: subnetreturn
+
+- name: Create a public ip address
+  azure_rm_publicipaddress:
+    resource_group: "{{vnetgw_resource_group_name}}"
+    name: "{{vnetgw_publicip_name}}"
+    allocation_method: Dynamic
+  register: publicipreturn
+
+- debug: 
+    var: publicipreturn
+- debug: 
+    var: subnetreturn.state.id
 
 - name: Create a new Virtual gateway
   azure_rm_deployment:
@@ -20,35 +38,22 @@
       $schema: https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#
       contentVersion: 1.0.0.0
       resources: 
-      - apiVersion: "2017-06-01"
+      - apiVersion: '2017-06-01'
         name: "{{vnetgw_name}}"
-        type: "Microsoft.Network/virtualNetworkGateways"
+        type: Microsoft.Network/virtualNetworkGateways
         location: "{{vnetgw_location}}"
-        dependsOn: 
-        - "{{vnetgw_subnet_name}}"
-        - "{{vnetgw_publicip_name}}"
-        properties: 
-          gatewayType: "{{vnetgw_type}}"
-          ipConfigurations: 
+        dependsOn: []
+        properties:
+          gatewayType: "Vpn" 
+          ipConfigurations:
           - name: default
-            properties: 
-            privateIPAllocationMethod: Dynamic
-            subnet:
-              id: "/subscriptions/{{subscription_id}}/resourceGroups/{{vnetgw_resource_group_name}}/providers/Microsoft.Network/virtualNetworks/{{vnetgw_vnet_name}}/subnets/{{vnetgw_subnet_name}}"
-            publicIpAddress:
-              id: "/subscriptions/{{subscription_id}}/resourceGroups/{{vnetgw_resource_group_name}}/providers/Microsoft.Network/publicIPAddresses/{{vnetgw_publicip_name}}"
+            properties:
+              privateIPAllocationMethod: Dynamic
+              subnet:
+                id: "{{subnetreturn.state.id}}"
+              publicIpAddress:
+                id: "/subscriptions/{{subscription_id}}/resourceGroups/{{vnetgw_resource_group_name}}/providers/Microsoft.Network/publicIPAddresses/{{vnetgw_publicip_name}}"
+          vpnType: RouteBased
           sku:
             name: "{{vnetgw_sku_name}}"
             tier: "{{vnetgw_sku_tier}}"
-      - apiVersion: "2017-08-01"
-        type: "Microsoft.Network/virtualNetworks/subnets"
-        name: "virtualNetworks/{{vnetgw_subnet_name}}"
-        location: "{{vnetgw_location}}"
-        properties: 
-          addressPrefix: "{{vnetgw_subnet_prefix}}"
-      - apiVersion: "2017-08-01"
-        type: "Microsoft.Network/publicIPAddresses"
-        name: "{{vnetgw_publicip_name}}"
-        location: "{{vnetgw_location}}"
-        properties: 
-          publicIPAllocationMethod: Dynamic
