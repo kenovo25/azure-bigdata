@@ -1,0 +1,27 @@
+- name: Create a new RG for Automation
+  azure_rm_resourcegroup:
+    name: "{{ automation_resource_group_name }}"
+    location: "{{ automation_location }}"
+
+- script: generate_automation_arm.py --automation_name={{ automation_acc_name }} --location={{ automation_location }} --client_id={{ client_id }} --tenant={{ tenant }} --subscription_id={{ subscription_id }} --certificate_base64={{automation_certif}} --certificate_thumbprint={{automation_certif}} --storage_account={{ storage_account_name }}
+  register: generate_automation_arm_returns
+ 
+
+- name: Create automation account
+  azure_rm_deployment:
+    resource_group_name: "{{ automation_resource_group_name }}"
+    location: "{{ automation_location }}"
+    state: present
+    template: 
+      $schema: https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#
+      contentVersion: 1.0.0.0
+      resources: 
+        - type: Microsoft.Automation/automationAccounts
+          name: "{{ automation_acc_name }}"
+          apiVersion: 2015-01-01-preview
+          location: "{{ automation_location }}"
+          properties:
+            sku:
+              name: Free
+          resources: "{{ generate_automation_arm_returns.stdout | from_json }}"              
+

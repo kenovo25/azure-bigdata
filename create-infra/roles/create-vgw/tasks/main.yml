@@ -42,7 +42,7 @@
             tier: "{{vnetgw_sku_tier}}"
       - apiVersion: "2017-08-01"
         type: "Microsoft.Network/virtualNetworks/subnets"
-        name: "{{vnetgw_subnet_name}}"
+        name: "virtualNetworks/{{vnetgw_subnet_name}}"
         location: "{{vnetgw_location}}"
         properties: 
           addressPrefix: "{{vnetgw_subnet_prefix}}"
