@@ -57,7 +57,7 @@ def main():
   arm_resources.append(azureAutomationRunbook("deleteFromValidatedFolder", location, automation_name, storage_account))
 
   #inject shedules
-  schedules = listdir("../../automation/schedules")
+  schedules = listdir("../automation/schedules")
   for schedule in schedules:
     # we start every verify&copy at 19.00pm
     # every deleteInput job will be scheduled at 19.05pm
@@ -66,7 +66,7 @@ def main():
     #Add one day if deployment is made after 19 PM
     if (datetime.strftime(startDate,"%H:%M:%S") > "19:00:00"):
       startDate = datetime.now() + timedelta(days=1)
-    schedule_path = join("../../automation/schedules", schedule)
+    schedule_path = join("../automation/schedules", schedule)
     if(isfile(schedule_path)):
       schedule_resource = json.load(open(schedule_path))
       schedule_resource['apiVersion'] = "2015-10-31"
@@ -91,9 +91,9 @@ def main():
       arm_resources.append(schedule_resource_deleteValidated)
 
   #inject modules
-  modules = listdir("../../automation/modules_conf")
+  modules = listdir("../automation/modules_conf")
   for module in modules:
-    module_path = join("../../automation/modules_conf", module)
+    module_path = join("../automation/modules_conf", module)
     if(isfile(module_path)):
       module_resource = json.load(open(module_path))
       module_resource['name'] = automation_name + "/" + module_resource['name']
@@ -105,9 +105,9 @@ def main():
 
 
   #inject jobSchedules which link a runbook and a schedule
-  jobSchedules = listdir("../../automation/jobSchedules")
+  jobSchedules = listdir("../automation/jobSchedules")
   for jobSchedule in jobSchedules:
-    jobSchedule_path = join("../../automation/jobSchedules", jobSchedule)
+    jobSchedule_path = join("../automation/jobSchedules", jobSchedule)
     if(isfile(jobSchedule_path)):
       jobSchedule_resource = json.load(open(jobSchedule_path))
       jobSchedule_resource['apiVersion'] = "2015-10-31"
